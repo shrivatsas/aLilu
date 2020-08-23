@@ -1,6 +1,6 @@
 (defproject alilu "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "A key-value in-memory store"
+  :url "https://github.com/shrivatsas/aLilu"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
@@ -11,6 +11,7 @@
                 ;                               com.sun.jdmk/jmxtools
                 ;                               com.sun.jmx/jmxri]]
                                               ]
+  :plugins [[lein-cloverage "1.1.2"]]
   :main ^:skip-aot alilu.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
