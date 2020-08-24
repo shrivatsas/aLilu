@@ -6,4 +6,4 @@
     (get @storage key "Not Found"))
 
 (defn put! [key value]
-    (swap! @storage assoc key value))
+    (swap! storage assoc key value))

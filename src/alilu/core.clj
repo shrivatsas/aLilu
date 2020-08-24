@@ -17,8 +17,7 @@
 (defn write-operation [k v s]
   (log/debug "MASTER::SET:: received " k v)
     (do (store/put! k v)
-        (s/put! s "OK\r\n"))
-    (s/put! s "Not Allowed\r\n"))
+        (s/put! s "OK\r\n")))
 
 (defmethod parse "GET"
   [cmd & args]
@@ -34,9 +33,15 @@
   
 (defn echo-handler [s info]
   (s/connect s s))
+
+(defn close-server []
+  (println "closing"))
   
+(defn process-cmds [stream info]
+  (protocol/consume-cmds stream close-server))
+
 (defn start-server [port]
-  (tcp/start-server echo-handler
+  (tcp/start-server process-cmds
     {:port port} )
   (log/info "Listening.."))
 
