@@ -12,29 +12,26 @@
     (let [args (str/split command #" ")]
       (apply parse (conj args s))))
   
-  (defn process-commands [stream batch-commands f]
+(defn process-commands [stream batch-commands f]
     (let [cmds (str/split-lines batch-commands)]
       (dorun
-       (for [cmd cmds]
-         (f stream cmd)))))
+        (for [cmd cmds]
+            (f stream cmd)))))
 
 (defn consume-cmds-from-socket [stream f f_close]
     "It processes any new connection.
      The code is based on this example
-        http://ideolalia.com/aleph/literate.html#aleph.examples.tcp"
+     https://github.com/aleph-io/aleph/blob/master/examples/src/aleph/examples/tcp.clj#L119"
     (d/loop [cmd []]
       (-> (s/take! stream ::none)
           (d/chain
-           (fn [b]
-             (if (not (= b ::none))
-               (do
-                 (let [text (helper/to-string b)
-                       acc (conj cmd text)]
-                   (if (= \newline (last text))
-                     (do
-                       (process-commands stream (str/join acc) f)
-                       (d/recur []))
-                     (d/recur acc)))))))
+            (fn [b]
+              (when (not= b ::none)
+                (let [text (helper/to-string b)
+                      acc (conj cmd text)]
+                (when (= \newline (last text))
+                    (process-commands stream (str/join acc) f)
+                    (d/recur []))))))
           (d/catch
               (fn [ex]
                 (log/error  ex)
